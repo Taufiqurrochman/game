@@ -1,5 +1,6 @@
 package com.example.seven.utsandro;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,7 @@ public class ViewGame extends AppCompatActivity {
 
     protected Cursor cursor;
     GameHelper dbHelper;
-    Button btn1;
+    Button btn1, btn2, btn3;
     TextView text1,text2,text3,text4,text5;
 
 
@@ -29,13 +30,14 @@ public class ViewGame extends AppCompatActivity {
         text5=findViewById(R.id.textView5);
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM game WHERE nama = '"
-                +getIntent().getStringExtra("nama") + "'",null);
+        cursor = db.rawQuery("SELECT * FROM game WHERE id = "
+                +getIntent().getIntExtra("id",0),null);
         cursor.moveToFirst();
-
+        int id = 0;
         if (cursor.getCount()>0)
         {
             cursor.moveToPosition(0);
+            id = cursor.getInt(0);
             text1.setText(cursor.getString(0));
             text2.setText(cursor.getString(1));
             text3.setText(cursor.getString(2));
@@ -45,9 +47,30 @@ public class ViewGame extends AppCompatActivity {
         }
 
         btn1 = findViewById(R.id.button1);
+        btn2 = findViewById(R.id.button2);
+        btn3 = findViewById(R.id.button3);
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
+                finish();
+            }
+        });
+        final int finalId = id;
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), UpdateGame.class);
+                i.putExtra("id", finalId);
+                startActivity(i);
+            }
+        });
+
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                db.execSQL("DELETE FROM game WHERE id="+finalId);
+                MainActivity.layarutama.gameList();
                 finish();
             }
         });

@@ -4,8 +4,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class GameHelper extends SQLiteOpenHelper {
-    private static final String NAMA_DB = "sinetrons.db";
-    private static final String NAMA_TABEL = "sinetrons";
+    private static final String NAMA_DB = "game.db";
+    private static final String NAMA_TABEL = "game";
     private static final int VERSI_DB = 3;
 
     private static final String ID = "id";

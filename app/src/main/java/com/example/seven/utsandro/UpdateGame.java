@@ -1,5 +1,6 @@
 package com.example.seven.utsandro;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -32,8 +33,8 @@ public class UpdateGame extends AppCompatActivity {
         btn2 = findViewById(R.id.button2);
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM game WHERE nama = '"
-                +getIntent().getStringExtra("nama") + "'",null);
+        cursor = db.rawQuery("SELECT * FROM game WHERE id = "
+                +getIntent().getIntExtra("id",0),null);
         cursor.moveToFirst();
 
         if (cursor.getCount()>0)
@@ -58,7 +59,8 @@ public class UpdateGame extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "berhasil dirubah",
                         Toast.LENGTH_LONG).show();
                 MainActivity.layarutama.gameList();
-                finish();
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {

@@ -1,11 +1,16 @@
 package com.example.seven.utsandro;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +18,11 @@ import java.util.List;
 public class MainActivity extends Activity {
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager layoutManager;
-    RecyclerView.Adapter mAdapter;
+    Adapter mAdapter;
     GameHelper gameHelper;
+    List<Game> games = new ArrayList<>();
     Cursor cursor;
+    Button btnTambah, btnLogout;
 
     public static MainActivity layarutama;
 
@@ -25,16 +32,43 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_tampilan);
 
         layarutama = this;
-
+        btnTambah = findViewById(R.id.btnTambah);
+        btnLogout = findViewById(R.id.logout);
         mRecyclerView = findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<String> data = new ArrayList<>();
-        dumy(data);
 
-        mAdapter = new Adapter(data);
+        mAdapter = new Adapter(this, gameList());
         mRecyclerView.setAdapter(mAdapter);
+
+        btnTambah.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), InsertGame.class);
+                startActivity(i);
+            }
+        });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+
+
+                editor.clear();
+                editor.remove("username");
+                editor.remove("password");
+                editor.commit();
+                editor.apply();
+
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(i);
+
+            }
+        });
+
     }
 
     public List<Game> gameList(){
@@ -55,10 +89,12 @@ public class MainActivity extends Activity {
                 list.add(s);
             }
         }
+        mAdapter = new Adapter(this,list);
+        mRecyclerView.setAdapter(mAdapter);
 
         return list;
     }
 
-    private void dumy(ArrayList<String> data) {
-    }
+
+
     }

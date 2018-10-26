@@ -1,19 +1,27 @@
 package com.example.seven.utsandro;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
-    ArrayList<String> dataGlobal;
+    Context context;
+    List<Game> dataGlobal;
 
-    public Adapter(ArrayList<String> data) {
+    public Adapter(Context context, List<Game> data) {
+        this.context = context;
         dataGlobal = data;
     }
 
@@ -28,7 +36,23 @@ class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //mengeset masing views
-        holder.textView.setText(dataGlobal.get(position));
+        Game game = dataGlobal.get(position);
+        final int id = game.getID();
+        holder.textNama.setText(game.getNama());
+        holder.textGenre.setText(game.getGenre());
+        holder.textRating.setText(game.getRating());
+        holder.textDeveloper.setText(game.getDeveloper());
+
+        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context.getApplicationContext(), ViewGame.class);
+                i.putExtra("id",id);
+                context.startActivity(i);
+            }
+        });
+
+
     }
 
     @Override
@@ -39,14 +63,18 @@ class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView mImageView;
-        TextView textView;
+        TextView textNama, textGenre, textRating, textDeveloper;
+        RelativeLayout relativeLayout;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.image);
-            textView = itemView.findViewById(R.id.namagame);
-            textView = itemView.findViewById(R.id.genregame);
-            textView = itemView.findViewById(R.id.rating);
+            textNama = itemView.findViewById(R.id.namagame);
+            textGenre = itemView.findViewById(R.id.genregame);
+            textRating = itemView.findViewById(R.id.rating);
+            textDeveloper = itemView.findViewById(R.id.developer);
+            relativeLayout = itemView.findViewById(R.id.relativeLayout);
         }
     }
 }
